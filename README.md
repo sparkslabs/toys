@@ -1,4 +1,4 @@
 toys
 ====
 
-for playng around
+for playing around
