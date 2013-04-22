@@ -15,24 +15,41 @@ Role Toy Controller:
   May be operated directly
   Communicates with one or more Toys in the local vicinity using a Web API
 
-In order to store a value from toy
-As a toy controller
-I need the web service to accept a PUT request to a path
+Story: Getting things started:
+  
+  In order to store a value from Toy
+  As a Toy Controller
+  I need the web service to accept a PUT request to a path
 
-In order to retrieve a value from toy
-As a toy controller
-I need the web service to accept a GET request to a path
+  In order to retrieve a value from Toy
+  As a Toy Controller
+  I need the web service to accept a GET request to a path
 
-In order to retrieve timely information from a toy
-As a toy controller
-I need to webservice to accept web socket connection requests, and to update me when a resource changes
+  In order to make the Toy do something
+  As a Toy Controller
+  I need the Toy's web service to accept a POST request to a path
 
-In order to control a toy in a timely fashion
-As a toy controller
-I need to webservice to accept web socket connection requests, to allow me to send it control messages.
+Story: Later on down the line:
 
-In order to make the toy do something
-As a toy controller
-I need the toy's web service to accept a POST request to a path
+  In order to retrieve timely information from a Toy
+  As a Toy Controller
+  I need to webservice to accept web socket connection requests, and to update me when a resource changes
+
+  In order to control a toy in a timely fashion
+  As a Toy Controller
+  I need to webservice to accept web socket connection requests, to allow me to send it control messages.
+
+Thoughts:
+  When a toy recieves a message (get, put, post) for a resource it doesn't publish, it should throw back a web exception
+
+  A web exception needs defining
+    A web exception is an application concept sitting on top of an HTTP concept
+    It is likely to a be a 400 error for undefined values
+    For values relating to misuse of a behaviour a 500 series reponse is likely to ve appropriate
+
+  A web value needs defining
+  
+
+
 
 
