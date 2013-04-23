@@ -5,6 +5,8 @@ $ clear ;echo -ne "PUT /hello/world HTTP/1.0\nContent-Length: 12\n\nHello World\
 """
 
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
+import threading
+import time
 
 def Print(*argv, **argd):
     print argv, argd
@@ -25,11 +27,6 @@ class Resource(object):
     def __call__(self, *argv, **argd):
         print "CALL"
         self.function(*argv, **argd)
-
-r = Resource()
-r.set(5)
-r.get()
-r("hello", "world")
 
 DEFAULT_ERROR_MESSAGE = """\
 <head>
@@ -93,13 +90,32 @@ class WebResource( BaseHTTPRequestHandler ):
 
         self.wfile.write(content)
 
-protocol="HTTP/1.0"
-port = 1234
-server_address = ('', port)
-WebResource.protocol_version = protocol
-httpd = HTTPServer(server_address, WebResource)
+class WebThread(threading.Thread):
+  daemon = True
 
-sa = httpd.socket.getsockname()
-print "Serving HTTP on", sa[0], "port", sa[1], "..."
-httpd.serve_forever()
+  protocol="HTTP/1.0"
+  port = 1234
+  server_listenip = ''
 
+  def run(self):
+    server_address = (self.server_listenip, self.port)
+
+    WebResource.protocol_version = self.protocol
+    httpd = HTTPServer(server_address, WebResource)
+
+    sa = httpd.socket.getsockname()
+    print "Serving HTTP on", sa[0], "port", sa[1], "..."
+    httpd.serve_forever()
+
+
+if __name__ == "__main__":
+  r = Resource()
+  r.set(5)
+  r.get()
+  r("hello", "world")
+
+  wt = WebThread()
+  wt.start()
+
+  while True:
+    time.sleep(0.1)
