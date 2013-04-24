@@ -7,6 +7,9 @@ $ clear ;echo -ne "PUT /hello/world HTTP/1.0\nContent-Length: 12\n\nHello World\
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 import threading
 import time
+from Queue import Queue
+
+__version__ = 13.4
 
 def Print(*argv, **argd):
     print argv, argd
@@ -45,6 +48,10 @@ class WebResource( BaseHTTPRequestHandler ):
     def __init__(self, *argv, **argd):
         BaseHTTPRequestHandler.__init__(self, *argv, **argd)
         self.base = {}
+
+    def version_string(self):
+        """Return the server software version string."""
+        return self.server_version + ' ' + self.sys_version + ' ' + "ToyWebResource/"+str(__version__)
 
     def do_Headers(self):
         self.send_response(200)
@@ -96,7 +103,7 @@ class WebThread(threading.Thread):
   protocol="HTTP/1.0"
   port = 1234
   server_listenip = ''
-
+  readyQ = Queue()
   def run(self):
     server_address = (self.server_listenip, self.port)
 
@@ -105,8 +112,11 @@ class WebThread(threading.Thread):
 
     sa = httpd.socket.getsockname()
     print "Serving HTTP on", sa[0], "port", sa[1], "..."
+    self.readyQ.put(True)
     httpd.serve_forever()
 
+  def wait_ready(self):
+    return self.readyQ.get()
 
 if __name__ == "__main__":
   r = Resource()
