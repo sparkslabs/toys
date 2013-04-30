@@ -96,6 +96,17 @@ Story: Functional Object Mapping
      If a WebAPIUser makes a PUT request to the URI/robot/arm/position to change the position to 10
      Then the WebAPIProvider should respond with a WebException, because the position attribute is a consequence of the moveto behaviour
 
+Story: Toy history is repeatable
+  In order to debug events, in a system
+  As a WebAPIUser
+  I need to WebAPIProvider to provder an ongoing history of WebValues, WebExceptions, and a log of incoming events
+
+  Comment: This is akin to an access log and error log, with the further detail of logging what is sent back out in both cases.
+    There are security implications regarding this as well, but there are potential automation benefits
+    This is similar to every device providing an RSS feed regarding it's activity
+    
+    It is likely that some devices could not provide this.
+
 Story: Getting things started:
 
   In order to store a value from Toy
