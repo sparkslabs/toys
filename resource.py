@@ -106,7 +106,7 @@ anotherperson = Person("Matt", "smith", "cardiff")
 
 Person.__get_all__()
 
-gc.get_referrers(x) for x in gc.get_objects() if  type(x) == Person]
+[ gc.get_referrers(x) for x in gc.get_objects() if  type(x) == Person]
 
 # if __name__=="__main__":
 if 1:
