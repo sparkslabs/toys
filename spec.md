@@ -51,7 +51,7 @@ Story: Basic protocol interaction
   In order to denote exceptional behaviour in response to invalid WebParameters or invalid system state
   As a WebAPIProvider
   I need to respond with a WebException
-  
+
   In order to understand what has gone wrong with a particular request
   As a WebAPIUser
   I need to WebAPIProvider to include details regarding what went wrong, where it went wrong, when it went wrong, why it went wrong, "who" is responsible for the fault, and if possible how to rectify the problem - in short errors need to be as verbose as practical
