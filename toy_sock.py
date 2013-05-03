@@ -52,17 +52,36 @@ class WebResource( BaseHTTPRequestHandler ):
         print "_____________________"
         for header in self.headers:
           print header, self.headers.getheaders(header)
-
         print "dir(self)", dir(self)
-        self.do_Headers()
-        print self.path , self.path.split("/")
-        parts =  self.path.split("/")
-        if parts[0] != "":
-            print "hmm"
-            content = STATIC_MESSAGE % {"code": 101, "message" : "hello", "explain": "You have a malformed path: " + repr(self.path)}
+
+        do_socks = False
+        if "connection" in self.headers.keys():
+          if self.headers.getheaders("connection") == ["Upgrade"]:
+            do_socks = True
+
+        if not do_socks:
+          self.do_Headers()
+          print self.path , self.path.split("/")
+          parts =  self.path.split("/")
+          if parts[0] != "":
+              print "hmm"
+              content = STATIC_MESSAGE % {"code": 101, "message" : "hello", "explain": "You have a malformed path: " + repr(self.path)}
+          else:
+              content = STATIC_MESSAGE % {"code": 101, "message" : "hello", "explain": self.path}
+          self.wfile.write(content)
         else:
-            content = STATIC_MESSAGE % {"code": 101, "message" : "hello", "explain": self.path}
-        self.wfile.write(content)
+          print "DO SOCKS! DO SOCKS!"
+          response = """\
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+""".replace("\n","\r\n")
+          self.wfile.write(response)
+          self.wfile.write("> \r\n")
+# This next line fails at the moment...
+#          line = self.rfile.readline()
+#          self.wfile.write(line[::-1]+"\r\n")
 
 
 import socket
@@ -139,6 +158,7 @@ result = []
 chunksize = 32
 while True:
   readables, writeables, other = select.select([sock], [sock], [sock],timeout)
+  print "Here?",readables, writeables, other 
   try:
     data = sock.recv(chunksize)
     if len(data)>0:
